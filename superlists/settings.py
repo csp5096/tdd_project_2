@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-AUTH_USER_MODEL = 'accounts.ListUser'
+AUTH_USER_MODEL = 'accounts.User'
 
 AUTHENTICATION_BACKENDS = [
     'accounts.authentication.PasswordLessAuthenticationBackend',
@@ -147,8 +147,21 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Email Configuration
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_HOST = 'localhost'
+#EMAIL_PORT = 1025
+#MAIL_SERVER = os.environ.get('MAIL_SERVER','smtp.gmail.com')
+#MAIL_USERNAME =os.environ.get('MAIL_USERNAME','chuckbukowski1@gmail.com')
+#MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD',)
+#MAIL_PORT = int(os.environ.get('MAIL_PORT',  '465'))
+#MAIL_USE_TLS = int(os.environ.get('MAIL_USE_TLS',  False))
+#MAIL_USE_SSL = int(os.environ.get('MAIL_USE_SSL',  True))
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASSWORD',)
 EMAIL_HOST_USER = 'chuckbukowski1@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
