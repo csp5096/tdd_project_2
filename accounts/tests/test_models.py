@@ -18,7 +18,7 @@ class UserModelTest(TestCase):
         user = User.objects.create(email='edith@example.com')
         user.backend = ''
         request = self.client.request().wsgi_request
-        auth.login(request, user) # should not raise
+        auth.login(request, user)  # should not raise
 
 class TokenModelTest(TestCase):
 
