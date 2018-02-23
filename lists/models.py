@@ -8,6 +8,10 @@ class List(models.Model):
                               blank=True,
                               null=True)
 
+    @property
+    def name(self):
+        return self.item_set.first().text
+
     def get_absolute_url(self):
         return reverse('view_list', args=[self.id])
 
