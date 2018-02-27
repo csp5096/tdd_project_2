@@ -1,0 +1,69 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To-Do lists</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/base.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/">Superlists</a>
+              
+                <ul class="nav navbar-nav navbar-left">
+              <li><a href="/lists/users/edith@example.com/">My lists</a></li>
+            </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="navbar-text">Logged in as edith@example.com</li>
+                  <li><a href="/accounts/logout">Log out</a></li>
+                </ul>
+              
+            </div>
+          </nav>
+
+        
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 jumbotron">
+                <div class="text-center">
+                    <h1>Start a new To-Do list</h1>
+                    <form method="POST" action="
+    /lists/new
+">
+                        <input name="text" placeholder="Enter a to-do item" class="form-control input-lg" required="" id="id_text" type="text">
+                        <input name="csrfmiddlewaretoken" value="Bk65vm5YvRCjB49w9oQtOuUSxTj5f5Dlfc1WtlNccgd5awZEigwYec9Jo0aZIoA5" type="hidden">
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+              
+              
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+              
+              
+            </div>
+        </div>
+
+    </div>
+    <script src="/static/jquery-3.3.1.js"></script>
+    <script src="/static/list.js"></script>
+    <script>
+        $(document).ready(function () {
+          window.Superlists.initialize();
+        });
+    </script>
+
+
+</body></html>
