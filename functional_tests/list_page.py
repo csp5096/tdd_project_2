@@ -6,9 +6,8 @@ class ListPage(object):
     def __init__(self, test):
         self.test = test
 
-
     def get_table_rows(self):
-        return self.test.browser.find_elements_by_css_selector('#id_list_table_tr')
+        return self.test.browser.find_elements_by_css_selector('#id_list_table tr')
 
     @wait
     def wait_for_row_in_list_table(self, item_text, item_number):
@@ -33,12 +32,16 @@ class ListPage(object):
 
     def get_shared_with_list(self):
         return self.test.browser.find_elements_by_css_selector(
-            '.list_sharee'
+            '.list-sharee'
         )
 
     def share_list_with(self, email):
         self.get_share_box().send_keys(email)
         self.get_share_box().send_keys(Keys.ENTER)
         self.test.wait_for(lambda: self.test.assertIn(
-            email, [item.text for item in self.get_shared_with_list()]
+            email,
+            [item.text for item in self.get_shared_with_list()]
         ))
+
+    def get_list_owner(self):
+        return self.test.browser.find_element_by_id('id_list_owner').text
