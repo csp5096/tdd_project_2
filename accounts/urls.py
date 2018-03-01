@@ -1,4 +1,4 @@
-"""lists URL Configuration
+"""accounts URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -14,12 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from lists import views
+from accounts import views
+from django.contrib.auth.views import logout
 
 urlpatterns = [
-    #url(r'^new$', views.NewListView.as_view(), name='new_list'),
-    url(r'^new$', views.new_list, name='new_list'),
-    #url(r'^(\d+)/$', views.view_list, name='view_list'),
-    url(r'^(?P<pk>\d+)/$', views.ViewAndAndToList.as_view(), name='view_list'),
-    url(r'^users/(.+)/$', views.my_lists, name='my_lists'),
+    url(r'^send_login_email$', views.send_login_email, name='send_login_email'),
+    url(r'^login$', views.login, name='login'),
+    url(r'^logout$', logout, {'next_page': '/'}, name='logout'),
 ]

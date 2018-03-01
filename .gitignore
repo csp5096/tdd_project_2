@@ -4,3 +4,5 @@ Vagrantfile
 .vagrant/*
 __pycache__
 *.pyc
+functional_tests/screedumps
+npm-debug.log
