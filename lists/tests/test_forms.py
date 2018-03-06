@@ -73,3 +73,5 @@ class NewListFormTest(unittest.TestCase):
         response = form.save(owner=user)
         self.assertEqual(response, mock_List_create_new.return_value)
 
+
+
