@@ -203,38 +203,30 @@ class NewListViewUnitTest(unittest.TestCase):
 @patch('lists.views.NewListForm.save')
 class NewListViewFormMock(unittest.TestCase):
     """
-    Test View with mocked out form
+    Test classed based view NewListView with mocked out form with the RequestFactory method
     """
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.post(reverse('new_list'), {'text': 'new list item'})
         self.request.user = Mock()
 
-    def test_passes_POST_data_to_NewListForm(
-            self, save, is_valid
-    ):
+    def test_passes_POST_data_to_NewListForm(self, save, is_valid):
         NewListView.as_view()(self.request)
         self.assertTrue(NewListForm.save.called)
         self.assertEqual(NewListForm.save.call_count, 1)
 
-    def test_saves_form_with_owner_if_form_valid(
-            self, save, is_valid
-    ):
+    def test_saves_form_with_owner_if_form_valid(self, save, is_valid):
         NewListForm.is_valid.return_value = True
         NewListView.as_view()(self.request)
         NewListForm.save.assert_called_once_with(self.request.user)
 
-    def test_does_not_save_if_form_invalid(
-            self, save, is_valid
-    ):
+    def test_does_not_save_if_form_invalid(self, save, is_valid):
         NewListForm.is_valid.return_value = False
         NewListView.as_view()(self.request)
         self.assertFalse(NewListForm.save.called)
 
     @patch('lists.views.redirect')
-    def test_redirects_to_form_returned_object_if_form_valid(
-            self, redirect, save, is_valid
-    ):
+    def test_redirects_to_form_returned_object_if_form_valid(self, redirect, save, is_valid):
         NewListForm.is_valid.return_value = True
         response = NewListView.as_view()(self.request)
         self.assertEqual(response, redirect.return_value)
