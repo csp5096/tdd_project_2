@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import patch, Mock
 from django.http import HttpRequest
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.utils.html import escape
+from django.urls import reverse
 from django.contrib.auth import get_user_model
-from lists.views import new_list
+from lists.views import new_list, NewListView
 from lists.models import Item, List
 from lists.forms import (
     DUPLICATE_ITEM_ERROR, EMPTY_ITEM_ERROR,
@@ -192,11 +193,45 @@ class NewListViewUnitTest(unittest.TestCase):
                                             'home.html',
                                             {'form': mock_form}
                                             )
+
     def test_does_not_save_if_form_invalid(self, mockNewListForm):
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = False
         new_list(self.request)
         self.assertFalse(mock_form.save.called)
+
+@patch('lists.views.NewListForm.is_valid')
+@patch('lists.views.NewListForm.save')
+class NewListViewFormMock(unittest.TestCase):
+    """
+    Test class-based Views of NewListView with mocked out form, plus RequestFactory method.
+    """
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.request = self.factory.post(reverse('new_list'), {'text': 'new list item'})
+        self.request.user = Mock()
+
+    def test_passes_POST_data_to_NewListForm(self, save, is_valid):
+        NewListView.as_view()(self.request)
+        self.assertTrue(NewListForm.save.called)
+        self.assertEqual(NewListForm.save.call_count, 1)
+
+    def test_saves_form_with_owner_if_form_valid(self, save, is_valid):
+        NewListForm.is_valid.return_value = True
+        NewListView.as_view()(self.request)
+        NewListForm.save.assert_called_once_with(self.request.user)
+
+    def test_does_not_save_if_form_invalid(self, save, is_valid):
+        NewListForm.is_valid.return_value = False
+        NewListView.as_view()(self.request)
+        self.assertFalse(NewListForm.save.called)
+
+    @patch('lists.views.redirect')
+    def test_redirects_to_form_returned_object_if_form_valid(self, redirect, save, is_valid):
+        NewListForm.is_valid.return_value = True
+        response = NewListView.as_view()(self.request)
+        self.assertEqual(response, redirect.return_value)
+        redirect.assert_called_once_with(NewListForm.save.return_value)
 
 class MyListsTest(TestCase):
 
