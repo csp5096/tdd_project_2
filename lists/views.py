@@ -10,7 +10,7 @@ class HomePageView(FormView):
     template_name = 'home.html'
     form_class = ItemForm
 
-class ViewAndAndToList(DetailView, CreateView):
+class ViewAndAddToList(DetailView, CreateView):
     model = List
     template_name = 'list.html'
     form_class = ExistingListItemForm
@@ -33,15 +33,13 @@ class ViewAndAndToList(DetailView, CreateView):
                    'form': form}
                   )"""
 
-"""class NewListView(CreateView):
+class NewListView(CreateView, HomePageView):
+    form_class = NewListForm
     template_name = 'home.html'
-    form_class = ItemForm
-
 
     def form_valid(self, form):
-        list_ = List.objects.create()
-        form.save(for_list=list_)
-        return redirect(list_)"""
+        list_ = form.save(self.request.user)
+        return redirect(list_)
 
 def new_list(request):
     form = NewListForm(data=request.POST)
