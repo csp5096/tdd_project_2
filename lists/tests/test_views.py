@@ -156,19 +156,6 @@ class ListViewTest(TestCase):
         self.assertIsInstance(response.context['form'], ExistingListItemForm)
         self.assertContains(response, 'name="text"')
 
-class MyListsTest(TestCase):
-
-    def test_my_lists_url_renders_my_lists_template(self):
-        User.objects.create(email='a@b.com')
-        response = self.client.get('/lists/users/a@b.com/')
-        self.assertTemplateUsed(response, 'my_lists.html')
-
-    def test_passes_correct_owner_to_template(self):
-        User.objects.create(email='wrong@owner.com')
-        correct_user = User.objects.create(email='a@b.com')
-        response = self.client.get('/lists/users/a@b.com/')
-        self.assertEqual(response.context['owner'], correct_user)
-
 @patch('lists.views.NewListForm')
 class NewListViewUnitTest(unittest.TestCase):
 
@@ -210,6 +197,41 @@ class NewListViewUnitTest(unittest.TestCase):
         mock_form.is_valid.return_value = False
         new_list(self.request)
         self.assertFalse(mock_form.save.called)
+
+class MyListsTest(TestCase):
+
+    def test_my_lists_url_renders_my_lists_template(self):
+        User.objects.create(email='a@b.com')
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertTemplateUsed(response, 'my_lists.html')
+
+    def test_passes_correct_owner_to_template(self):
+        User.objects.create(email='wrong@owner.com')
+        correct_user = User.objects.create(email='a@b.com')
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertEqual(response.context['owner'], correct_user)
+
+class ShareListTest(TestCase):
+
+    def test_sharing_a_list_via_post(self):
+        sharee = User.objects.create(email='share.with@me.com')
+        list_ = List.objects.create()
+        self.client.post(
+            f'/lists/{list_.id}/share',
+            {'sharee': 'share.with@me.com'}
+        )
+        self.assertIn(sharee, list_.shared_with.all())
+
+    def test_redirects_after_POST(self):
+        sharee = User.objects.create(email='share.with@me.com')
+        list_ = List.objects.create()
+        response = self.client.post(
+            f'/lists/{list_.id}/share',
+            {'sharee': 'share.with@me.com'}
+        )
+        self.assertRedirects(response, list_.get_absolute_url())
+
+
 
 
 
