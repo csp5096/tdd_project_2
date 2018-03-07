@@ -6,7 +6,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'text')
+        fields = ('id', 'list', 'text')
 
 class ListSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True, source='item_set')
@@ -16,8 +16,13 @@ class ListSerializer(serializers.ModelSerializer):
         fields = ('id', 'items',)
 
 class ListViewSet(viewsets.ModelViewSet):
-    queryset = List.objects.all()
     serializer_class = ListSerializer
+    queryset = List.objects.all()
+
+class ItemViewSet(viewsets.ModelViewSet):
+    serializer_class = ItemSerializer
+    queryset = Item.objects.all()
 
 router = routers.SimpleRouter()
 router.register(r'lists', ListViewSet)
+router.register(r'items', ItemViewSet)

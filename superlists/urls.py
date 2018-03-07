@@ -17,7 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from lists import views as list_views
 from lists import urls as list_urls
-from lists import api_urls
+#from lists import api_urls
+from lists.api import router
 from accounts import urls as accounts_urls
 
 urlpatterns = [
@@ -25,5 +26,6 @@ urlpatterns = [
     url(r'^$', list_views.HomePageView.as_view(), name='home'),
     url(r'^lists/', include(list_urls)),
     url(r'^accounts/', include(accounts_urls)),
-    url(r'^api/', include(api_urls)),
+    #url(r'^api/', include(api_urls)),
+    url(r'^api/', include(router.urls)),
 ]
